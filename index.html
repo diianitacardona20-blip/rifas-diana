@@ -1,0 +1,91 @@
+DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dinámicas Diarias Diana</title>
+<style>
+body{margin:0;font-family:Arial;background:#fff7f8;color:#33252e;text-align:center}
+header{background:#63364f;color:white;padding:35px 10px}
+h1{font-size:30px}
+section{background:white;margin:18px auto;padding:20px;border-radius:15px;max-width:850px}
+.grid{display:grid;grid-template-columns:repeat(10,1fr);gap:6px}
+.num{padding:12px 2px;border:1px solid #d9b5c5;background:#fff1f5;border-radius:7px;font-weight:bold}
+.num.sel{background:#e8bd54;color:#332}
+button{cursor:pointer}
+.cta{background:#16834b;color:white;padding:14px 20px;border:0;border-radius:25px;font-weight:bold;margin:10px}
+nav{padding:15px;background:white}
+nav a{margin:8px;color:#63364f;font-weight:bold;text-decoration:none}
+@media(max-width:450px){.num{padding:9px 0;font-size:12px}}
+</style>
+</head>
+<body>
+<header>
+<h1>DINÁMICAS DIARIAS DIANA</h1>
+<p>¡Participa y gana!</p>
+</header>
+<nav>
+<a href="#inicio">Inicio</a>
+<a href="#rifa">Rifas</a>
+<a href="#resultados">Resultados</a>
+<a href="#contacto">Contactos</a>
+</nav>
+<section id="inicio">
+<h2>¡Bienvenidos!</h2>
+<p>Participa en nuestras rifas diarias. Escoge tus números y consulta su disponibilidad por WhatsApp.</p>
+</section>
+<section id="rifa">
+<h2>🎟️ NUESTRA RIFA</h2>
+<p><b>Premio:</b> Próximamente</p>
+<p><b>Valor de la boleta:</b> Próximamente</p>
+<p><b>Números disponibles:</b> 00 al 99</p>
+<p>Selecciona tus números:</p>
+<div class="grid" id="numeros"></div>
+<p id="seleccion">No has seleccionado números.</p>
+<button class="cta" onclick="enviar()">CONSULTAR POR WHATSAPP</button>
+<button onclick="limpiar()">Limpiar selección</button>
+</section>
+<section id="resultados">
+<h2>Resultados y ganadores</h2>
+<p>Próximamente publicaremos aquí los resultados.</p>
+</section>
+<section id="contacto">
+<h2>Contacto</h2>
+<p>WhatsApp: 319 211 5691</p>
+<a class="cta" href="https://wa.me/573192115691">ESCRÍBENOS</a>
+</section>
+<footer><p>Dinámicas Diarias Diana</p></footer>
+<script>
+let elegidos=[];
+let contenedor=document.getElementById("numeros");
+for(let i=0;i<100;i++){
+let n=String(i).padStart(2,"0");
+let b=document.createElement("button");
+b.textContent=n;
+b.className="num";
+b.onclick=()=>{
+if(elegidos.includes(n)){
+elegidos=elegidos.filter(x=>x!==n);
+b.classList.remove("sel");
+}else{
+elegidos.push(n);
+b.classList.add("sel");
+}
+document.getElementById("seleccion").textContent=
+elegidos.length?"Tus números: "+elegidos.sort().join(", "):"No has seleccionado números.";
+};
+contenedor.appendChild(b);
+}
+function limpiar(){
+elegidos=[];
+document.querySelectorAll(".num").forEach(b=>b.classList.remove("sel"));
+document.getElementById("seleccion").textContent="No has seleccionado números.";
+}
+function enviar(){
+if(!elegidos.length){alert("Selecciona primero tus números");return;}
+let mensaje="Hola Diana, quiero consultar estos números: "+elegidos.sort().join(", ");
+window.open("https://wa.me/573192115691?text="+encodeURIComponent(mensaje),"_blank");
+}
+</script>
+</body>
+</html>
