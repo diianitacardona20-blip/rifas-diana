@@ -85,13 +85,21 @@ for(let n=0;n<100;n++){
  b.addEventListener("click",()=>{if(chosen.has(n)){chosen.delete(n);b.classList.remove("selected")}else{chosen.add(n);b.classList.add("selected")}update()});
  grid.appendChild(b);
 }
-document.getElementById("clear").addEventListener("click",()=>{chosen.clear();document.querySelectorAll(".num").forEach(b=>b.classList.remove("selected"));update()});
-document.getElementById("premios").textContent = "Por definir";
-document.getElementById("valor-numero").textContent = "Por definir";
-document.getElementById("loteria").textContent = "Por definir";
-document.getElementById("fecha-sorteo").textContent = "Por definir";
-document.getElementById("hora-sorteo").textContent = "Por definir";
-document.getElementById("estado-dinamica").textContent = "Disponible";
+fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQ984cVOOH1ngKzSmdBVYtStvH8zv6O6PuvvrISdEJBqsie6mT0AEGstF4Xl7PORHc5rEGtwtpM-n6H/pub?output=csv")
+  .then(respuesta => respuesta.text())
+  .then(texto => {
+    const filas = texto.trim().split(/\r?\n/);
+    const d = filas[1].split(/,(?=(?:[^"]"[^"]")[^"]$)/)
+      .map(celda => celda.replace(/^"|"$/g, "").replace(/""/g, '"').trim());
+
+    document.getElementById("premios").textContent = d[0] || "Por definir";
+    document.getElementById("valor-numero").textContent = d[1] || "Por definir";
+    document.getElementById("loteria").textContent = d[2] || "Por definir";
+    document.getElementById("fecha-sorteo").textContent = d[3] || "Por definir";
+    document.getElementById("hora-sorteo").textContent = d[4] || "Por definir";
+    document.getElementById("estado-dinamica").textContent = d[5] || "Por definir";
+  })
+  .catch(error => console.log("Error al cargar
 
 update();
 </script>
