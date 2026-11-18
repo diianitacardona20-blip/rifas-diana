@@ -264,5 +264,61 @@ update();
   <script>
 const URL_RIFAS = "https://script.google.com/macros/s/AKfycbwgzpzhlaDiKSKJyU2Mgwq8aW2tkFIXIJJOXqZTmV7qRoNM19RMQ7B2nLgb8g1A6kny5Q/exec";
 </script>
+  <script>
+const botonEditar = document.createElement("button");
+
+botonEditar.textContent = "✏️ EDITAR RIFA";
+botonEditar.style.cssText =
+"position:fixed;bottom:20px;right:20px;z-index:99999;padding:15px;background:#e91e63;color:white;border:0;border-radius:12px;font-weight:bold;font-size:16px;";
+
+document.body.appendChild(botonEditar);
+
+botonEditar.onclick = function() {
+  const premios = prompt("Premios de la rifa:");
+  if (premios === null) return;
+
+  const valor = prompt("Valor del número:");
+  if (valor === null) return;
+
+  const loteria = prompt("Lotería:");
+  if (loteria === null) return;
+
+  const fecha = prompt("Fecha del sorteo:");
+  if (fecha === null) return;
+
+  const hora = prompt("Hora del sorteo:");
+  if (hora === null) return;
+
+  const estado = prompt("Estado de la rifa:");
+  if (estado === null) return;
+
+  const datos = {
+    premios, valor, loteria, fecha, hora, estado
+  };
+
+  const formulario = document.createElement("form");
+  formulario.method = "POST";
+  formulario.action = URL_RIFAS;
+  formulario.target = "respuestaRifas";
+
+  const campo = document.createElement("input");
+  campo.type = "hidden";
+  campo.name = "datos";
+  campo.value = JSON.stringify(datos);
+
+  formulario.appendChild(campo);
+  document.body.appendChild(formulario);
+
+  formulario.submit();
+  formulario.remove();
+
+  alert("Solicitud enviada. Revisa los datos en tu hoja de cálculo.");
+};
+
+const marco = document.createElement("iframe");
+marco.name = "respuestaRifas";
+marco.style.display = "none";
+document.body.appendChild(marco);
+</script>
 </body>
 </html>
