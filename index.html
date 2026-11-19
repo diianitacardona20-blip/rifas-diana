@@ -8,9 +8,7 @@
 <style>
 *{box-sizing:border-box}
 body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  color:#321044;
+  margin:0;font-family:Arial,sans-serif;color:#321044;
   background:linear-gradient(145deg,#ffe5f6,#f1d9ff 48%,#fff4d7);
 }
 header{
@@ -48,7 +46,9 @@ h2{color:#67128e;margin:24px 0 10px}
   font-size:clamp(.75rem,2.2vw,1rem);cursor:pointer;
 }
 .num.selected{background:#7b1fa2;color:white;border-color:#7b1fa2}
-.num:disabled{background:#ccc;color:#666;cursor:not-allowed}
+.num.reserved,.num:disabled{
+  background:#ccc;color:#666;border-color:#aaa;cursor:not-allowed;
+}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
 .btn{
   display:inline-block;text-decoration:none;border:0;border-radius:999px;
@@ -105,11 +105,12 @@ footer{text-align:center;padding:24px 12px;color:#6b347d}
     <div class="legend">
       <span><i class="dot" style="background:#fff8ff;border:1px solid #c9a5d9"></i>Disponible</span>
       <span><i class="dot" style="background:#7b1fa2"></i>Seleccionado</span>
+      <span><i class="dot" style="background:#ccc"></i>Reservado</span>
     </div>
     <div class="grid" id="numbers"></div>
     <div class="actions">
       <button class="btn secondary" onclick="limpiarSeleccion()">Limpiar selección</button>
-      <button class="btn primary" onclick="enviarWhatsApp()">Enviar por WhatsApp</button>
+      <button class="btn primary" id="boton-enviar" onclick="enviarWhatsApp()">Enviar por WhatsApp</button>
     </div>
     <p class="small" id="seleccion">Números seleccionados: ninguno</p>
   </section>
@@ -129,7 +130,44 @@ footer{text-align:center;padding:24px 12px;color:#6b347d}
 <script>
 const URL_RIFAS = "https://script.google.com/macros/s/AKfycbwgzpzhlaDiKSKJyU2Mgwq8aW2tkFIXIJJOXqZTmV7qRoNM19RMQ7B2nLgb8g1A6kny5Q/exec";
 const WHATSAPP = "573192115691";
+
 let seleccionados = [];
+let reservados = new Set();
+let procesando = false;
+
+function consultarGoogle(parametros) {
+  return new Promise((resolve, reject) => {
+    const nombre = "respuestaRifa" + Date.now() + Math.floor(Math.random()*10000);
+    const script = document.createElement("script");
+    const consulta = new URLSearchParams(parametros);
+    consulta.set("callback", nombre);
+    consulta.set("actualizar", Date.now());
+
+    const tiempo = setTimeout(() => {
+      limpiar();
+      reject(new Error("Tiempo de espera agotado"));
+    }, 15000);
+
+    function limpiar() {
+      clearTimeout(tiempo);
+      delete window[nombre];
+      script.remove();
+    }
+
+    window[nombre] = function(datos) {
+      limpiar();
+      resolve(datos);
+    };
+
+    script.onerror = function() {
+      limpiar();
+      reject(new Error("No se pudo conectar con Google Sheets"));
+    };
+
+    script.src = URL_RIFAS + "?" + consulta.toString();
+    document.body.appendChild(script);
+  });
+}
 
 function cargarDatosRifa(datos) {
   if (!datos || datos.error) {
@@ -148,18 +186,31 @@ function cargarDatosRifa(datos) {
     "Información actualizada desde Google Sheets.";
 }
 
-function cargarRifa() {
-  const anterior = document.getElementById("script-rifa");
-  if (anterior) anterior.remove();
-
-  const script = document.createElement("script");
-  script.id = "script-rifa";
-  script.src = URL_RIFAS + "?callback=cargarDatosRifa&actualizar=" + Date.now();
-  script.onerror = function() {
+async function cargarRifa() {
+  try {
+    const datos = await consultarGoogle({});
+    cargarDatosRifa(datos);
+  } catch (error) {
     document.getElementById("mensaje-datos").textContent =
       "No se pudo conectar con Google Sheets.";
-  };
-  document.body.appendChild(script);
+  }
+}
+
+async function cargarReservas() {
+  try {
+    const datos = await consultarGoogle({accion:"reservas"});
+    if (!datos || !datos.ok) throw new Error("No se pudieron leer las reservas");
+
+    reservados = new Set(
+      (datos.reservas || []).map(r => String(r.numero).padStart(2,"0"))
+    );
+
+    crearNumeros();
+    actualizarSeleccion();
+  } catch (error) {
+    document.getElementById("mensaje-datos").textContent =
+      "No se pudieron consultar los números reservados. Actualiza la página.";
+  }
 }
 
 function crearNumeros() {
@@ -172,14 +223,26 @@ function crearNumeros() {
     boton.type = "button";
     boton.className = "num";
     boton.textContent = numero;
+
+    if (reservados.has(numero)) {
+      boton.classList.add("reserved");
+      boton.disabled = true;
+      boton.title = "Número reservado";
+    } else if (seleccionados.includes(numero)) {
+      boton.classList.add("selected");
+    }
+
     boton.onclick = function() {
       seleccionarNumero(numero, boton);
     };
+
     contenedor.appendChild(boton);
   }
 }
 
 function seleccionarNumero(numero, boton) {
+  if (procesando || reservados.has(numero)) return;
+
   if (seleccionados.includes(numero)) {
     seleccionados = seleccionados.filter(n => n !== numero);
     boton.classList.remove("selected");
@@ -187,6 +250,7 @@ function seleccionarNumero(numero, boton) {
     seleccionados.push(numero);
     boton.classList.add("selected");
   }
+
   actualizarSeleccion();
 }
 
@@ -198,25 +262,87 @@ function actualizarSeleccion() {
 }
 
 function limpiarSeleccion() {
+  if (procesando) return;
   seleccionados = [];
-  document.querySelectorAll(".num").forEach(b => b.classList.remove("selected"));
+  crearNumeros();
   actualizarSeleccion();
 }
 
-function enviarWhatsApp() {
+async function enviarWhatsApp() {
+  if (procesando) return;
+
   if (seleccionados.length === 0) {
     alert("Primero selecciona uno o varios números.");
     return;
   }
 
-  const mensaje = "Hola, quiero participar en Dinámicas Diarias DIANA. " +
-    "Mis números son: " + seleccionados.join(", ") +
-    ". Quiero consultar su disponibilidad.";
-  window.open("https://wa.me/" + WHATSAPP + "?text=" +
-    encodeURIComponent(mensaje), "_blank");
+  const nombre = prompt("Escribe tu nombre para registrar la reserva:");
+  if (nombre === null || !nombre.trim()) return;
+
+  const telefono = prompt("Escribe tu número de WhatsApp:");
+  if (telefono === null || !telefono.trim()) return;
+
+  const numeros = [...seleccionados];
+  procesando = true;
+  document.getElementById("boton-enviar").textContent = "Registrando...";
+  document.getElementById("boton-enviar").disabled = true;
+
+  let guardados = [];
+  let ocupados = [];
+
+  try {
+    for (const numero of numeros) {
+      const resultado = await consultarGoogle({
+        accion:"reservar",
+        numero:numero,
+        nombre:nombre.trim(),
+        whatsapp:telefono.trim()
+      });
+
+      if (resultado && resultado.ok) {
+        guardados.push(numero);
+      } else {
+        ocupados.push(numero);
+      }
+    }
+
+    await cargarReservas();
+
+    seleccionados = [];
+    actualizarSeleccion();
+
+    if (guardados.length > 0) {
+      const mensaje = "Hola, quiero participar en Dinámicas Diarias DIANA. " +
+        "Mi nombre es " + nombre.trim() +
+        ". Mi WhatsApp es " + telefono.trim() +
+        ". Mis números solicitados son: " + guardados.join(", ") +
+        ". Quedo pendiente de confirmación.";
+
+      window.location.href = "https://wa.me/" + WHATSAPP +
+        "?text=" + encodeURIComponent(mensaje);
+    }
+
+    if (ocupados.length > 0) {
+      alert("Estos números ya estaban reservados: " + ocupados.join(", ") +
+        ". Los demás se registraron correctamente.");
+    } else if (guardados.length > 0) {
+      alert("Tus números quedaron registrados como pendientes. Ahora se abrirá WhatsApp.");
+    }
+
+  } catch (error) {
+    alert("No se pudo completar la reserva. Revisa tu conexión e intenta nuevamente.");
+    await cargarReservas();
+  } finally {
+    procesando = false;
+    document.getElementById("boton-enviar").textContent = "Enviar por WhatsApp";
+    document.getElementById("boton-enviar").disabled = false;
+  }
 }
 
 function editarRifa() {
+  const clave = prompt("Escribe tu contraseña de administradora:");
+  if (clave === null || !clave.trim()) return;
+
   const premios = prompt("Premios:", document.getElementById("premios").textContent);
   if (premios === null) return;
 
@@ -241,11 +367,23 @@ function editarRifa() {
   formulario.action = URL_RIFAS;
   formulario.target = "ventana-guardado";
 
-  const campo = document.createElement("input");
-  campo.type = "hidden";
-  campo.name = "datos";
-  campo.value = JSON.stringify(datos);
-  formulario.appendChild(campo);
+  const campoAccion = document.createElement("input");
+  campoAccion.type = "hidden";
+  campoAccion.name = "accion";
+  campoAccion.value = "editar";
+  formulario.appendChild(campoAccion);
+
+  const campoClave = document.createElement("input");
+  campoClave.type = "hidden";
+  campoClave.name = "clave";
+  campoClave.value = clave;
+  formulario.appendChild(campoClave);
+
+  const campoDatos = document.createElement("input");
+  campoDatos.type = "hidden";
+  campoDatos.name = "datos";
+  campoDatos.value = JSON.stringify(datos);
+  formulario.appendChild(campoDatos);
 
   let iframe = document.getElementById("ventana-guardado");
   if (!iframe) {
@@ -266,6 +404,7 @@ function editarRifa() {
 
 crearNumeros();
 cargarRifa();
+cargarReservas();
 </script>
 </body>
 </html>
