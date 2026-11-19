@@ -1,166 +1,78 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#7b1fa2">
 <title>Dinámicas Diarias DIANA</title>
 
 <style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
-  color: #321044;
-  background: linear-gradient(145deg,#ffe5f6,#f1d9ff 48%,#fff4d7);
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  color:#321044;
+  background:linear-gradient(145deg,#ffe5f6,#f1d9ff 48%,#fff4d7);
 }
-
-header {
-  background: linear-gradient(115deg,#4c087b,#a20e9c 58%,#f328a8);
-  color: white;
-  padding: 22px 16px 30px;
-  overflow: hidden;
+header{
+  background:linear-gradient(115deg,#4c087b,#a20e9c 58%,#f328a8);
+  color:white;padding:22px 16px 30px;
 }
-
-.hero {
-  max-width: 1050px;
-  margin: auto;
-  display: grid;
-  grid-template-columns: minmax(180px,340px) 1fr;
-  gap: 22px;
-  align-items: center;
+.hero{
+  max-width:1050px;margin:auto;
+  display:grid;grid-template-columns:minmax(180px,340px) 1fr;
+  gap:22px;align-items:center;
 }
-
-.hero img {
-  width: 100%;
-  max-height: 300px;
-  object-fit: cover;
-  object-position: center 25%;
-  border: 5px solid #ffe08a;
-  border-radius: 28px;
-  box-shadow: 0 12px 35px #21002e66;
+.hero img{
+  width:100%;max-height:300px;object-fit:cover;
+  object-position:center 25%;border:5px solid #ffe08a;
+  border-radius:28px;box-shadow:0 12px 35px #21002e66;
 }
-
-h1 {
-  font-family: Georgia,serif;
-  font-size: clamp(2.2rem,6vw,4.4rem);
-  line-height: .98;
-  margin: 0;
-  text-shadow: 0 4px 0 #4b075f;
+h1{font-family:Georgia,serif;font-size:clamp(2.2rem,6vw,4.4rem);line-height:1;margin:0}
+.tag{font-size:1.15rem}
+.spark{color:#ffe08a}
+main{max-width:1050px;margin:22px auto;padding:0 14px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.card,.panel{
+  background:white;border:2px solid #f7b9e9;border-radius:18px;
+  padding:15px;text-align:center;box-shadow:0 6px 16px #67148a18;
 }
-
-.tag { font-size: 1.15rem; margin: 12px 0; }
-.spark { color: #ffe08a; }
-
-main { max-width: 1050px; margin: 22px auto; padding: 0 14px; }
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 12px;
-  margin-bottom: 18px;
+.card b{display:block;color:#74128d;font-size:1.25rem;margin-bottom:7px}
+h2{color:#67128e;margin:24px 0 10px}
+.panel{text-align:left;border:1px solid #f3c4eb;border-radius:22px;padding:16px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.92rem;margin:8px 0 14px}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px}
+.grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px}
+.num{
+  border:1px solid #c9a5d9;border-radius:9px;background:#fff8ff;
+  color:#48115f;padding:9px 2px;font-weight:bold;
+  font-size:clamp(.75rem,2.2vw,1rem);cursor:pointer;
 }
-
-.card {
-  background: #fff;
-  border: 2px solid #f7b9e9;
-  border-radius: 18px;
-  padding: 15px;
-  text-align: center;
-  box-shadow: 0 6px 16px #67148a18;
+.num.selected{background:#7b1fa2;color:white;border-color:#7b1fa2}
+.num:disabled{background:#ccc;color:#666;cursor:not-allowed}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
+.btn{
+  display:inline-block;text-decoration:none;border:0;border-radius:999px;
+  padding:12px 18px;font-weight:bold;cursor:pointer;
 }
-
-.card b { display: block; color: #74128d; font-size: 1.35rem; }
-h2 { color: #67128e; margin: 24px 0 10px; }
-
-.panel {
-  background: #fff;
-  border-radius: 22px;
-  padding: 16px;
-  box-shadow: 0 8px 25px #67148a18;
-  border: 1px solid #f3c4eb;
+.primary{background:#18b85a;color:white}
+.secondary{background:#74128d;color:white}
+.small{font-size:.88rem;color:#694d73;line-height:1.5}
+.winners{
+  background:linear-gradient(120deg,#4b087b,#92108f);
+  color:white;border-radius:20px;padding:18px;margin-top:18px;
 }
-
-.legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  font-size: .92rem;
-  margin: 8px 0 14px;
-}
-
-.dot {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  margin-right: 5px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(10,minmax(0,1fr));
-  gap: 5px;
-}
-
-.num {
-  border: 1px solid #c9a5d9;
-  border-radius: 9px;
-  background: #fff8ff;
-  color: #48115f;
-  padding: 9px 2px;
-  font-weight: 800;
-  font-size: clamp(.75rem,2.2vw,1rem);
-  cursor: pointer;
-}
-
-.num:focus { outline: 3px solid #f328a8; }
-.num.selected { background: #7b1fa2; color: white; border-color: #7b1fa2; }
-
-.actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 15px;
-}
-
-.btn {
-  display: inline-block;
-  text-decoration: none;
-  border: 0;
-  border-radius: 999px;
-  padding: 12px 18px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.primary { background: #18b85a; color: white; }
-.secondary { background: #74128d; color: white; }
-.small { font-size: .88rem; color: #694d73; line-height: 1.5; }
-
-.winners {
-  background: linear-gradient(120deg,#4b087b,#92108f);
-  color: white;
-  border-radius: 20px;
-  padding: 18px;
-  margin-top: 18px;
-}
-
-footer { text-align: center; padding: 24px 12px; color: #6b347d; }
-
-@media(max-width:650px) {
-  .hero { grid-template-columns: 1fr; text-align: center; }
-  .hero img { max-width: 260px; margin: auto; }
-  .cards { grid-template-columns: 1fr; }
-  .grid { gap: 3px; }
-  .num { padding: 8px 0; border-radius: 6px; }
+footer{text-align:center;padding:24px 12px;color:#6b347d}
+@media(max-width:650px){
+  .hero{grid-template-columns:1fr;text-align:center}
+  .hero img{max-width:260px;margin:auto}
+  .cards{grid-template-columns:1fr}
+  .grid{gap:3px}
+  .num{padding:8px 0;border-radius:6px}
 }
 </style>
 </head>
 
 <body>
-
 <header>
   <div class="hero">
     <img src="muneca-diana.jpg" alt="Muñequita Diana">
@@ -174,6 +86,186 @@ footer { text-align: center; padding: 24px 12px; color: #6b347d; }
 
 <main>
   <section class="cards">
-    <div class="card">🎁 <b>Premios</b><span>Consulta el premio de cada dinámica</span></div>
-    <div class="card">🎟️ <b>Números 00–99</b><span>Escoge tus números favoritos</span></div>
-    <div class="card">💬 <b>Atención por WhatsApp</b><span>Pregunta y confirma t…
+    <div class="card">🎁 <b>Premios</b><span id="premios">Por definir</span></div>
+    <div class="card">🎟️ <b>Valor del número</b><span id="valor-numero">Por definir</span></div>
+    <div class="card">💬 <b>Atención por WhatsApp</b><span>Pregunta y confirma tus números</span></div>
+  </section>
+
+  <section class="panel">
+    <h2>🎉 Información de la dinámica</h2>
+    <p><b>Lotería:</b> <span id="loteria">Por definir</span></p>
+    <p><b>Fecha del sorteo:</b> <span id="fecha-sorteo">Por definir</span></p>
+    <p><b>Hora:</b> <span id="hora-sorteo">Por definir</span></p>
+    <p><b>Estado:</b> <span id="estado-dinamica">Por definir</span></p>
+    <p class="small" id="mensaje-datos">Conectando con la información de la rifa...</p>
+  </section>
+
+  <h2>🎟️ Escoge tus números del 00 al 99</h2>
+  <section class="panel">
+    <div class="legend">
+      <span><i class="dot" style="background:#fff8ff;border:1px solid #c9a5d9"></i>Disponible</span>
+      <span><i class="dot" style="background:#7b1fa2"></i>Seleccionado</span>
+    </div>
+    <div class="grid" id="numbers"></div>
+    <div class="actions">
+      <button class="btn secondary" onclick="limpiarSeleccion()">Limpiar selección</button>
+      <button class="btn primary" onclick="enviarWhatsApp()">Enviar por WhatsApp</button>
+    </div>
+    <p class="small" id="seleccion">Números seleccionados: ninguno</p>
+  </section>
+
+  <section class="winners">
+    <h2 style="color:white;margin-top:0">🏆 ¡Mucha suerte!</h2>
+    <p>Gracias por participar en Dinámicas Diarias DIANA.</p>
+  </section>
+
+  <div class="actions">
+    <button class="btn secondary" onclick="editarRifa()">EDITAR RIFA</button>
+  </div>
+</main>
+
+<footer>💖 Dinámicas Diarias DIANA 💖</footer>
+
+<script>
+const URL_RIFAS = "https://script.google.com/macros/s/AKfycbwgzpzhlaDiKSKJyU2Mgwq8aW2tkFIXIJJOXqZTmV7qRoNM19RMQ7B2nLgb8g1A6kny5Q/exec";
+const WHATSAPP = "573192115691";
+let seleccionados = [];
+
+function cargarDatosRifa(datos) {
+  if (!datos || datos.error) {
+    document.getElementById("mensaje-datos").textContent =
+      "No se pudieron cargar los datos. Intenta actualizar la página.";
+    return;
+  }
+
+  document.getElementById("premios").textContent = datos.premios || "Por definir";
+  document.getElementById("valor-numero").textContent = datos.valor || "Por definir";
+  document.getElementById("loteria").textContent = datos.loteria || "Por definir";
+  document.getElementById("fecha-sorteo").textContent = datos.fecha || "Por definir";
+  document.getElementById("hora-sorteo").textContent = datos.hora || "Por definir";
+  document.getElementById("estado-dinamica").textContent = datos.estado || "Por definir";
+  document.getElementById("mensaje-datos").textContent =
+    "Información actualizada desde Google Sheets.";
+}
+
+function cargarRifa() {
+  const anterior = document.getElementById("script-rifa");
+  if (anterior) anterior.remove();
+
+  const script = document.createElement("script");
+  script.id = "script-rifa";
+  script.src = URL_RIFAS + "?callback=cargarDatosRifa&actualizar=" + Date.now();
+  script.onerror = function() {
+    document.getElementById("mensaje-datos").textContent =
+      "No se pudo conectar con Google Sheets.";
+  };
+  document.body.appendChild(script);
+}
+
+function crearNumeros() {
+  const contenedor = document.getElementById("numbers");
+  contenedor.innerHTML = "";
+
+  for (let i = 0; i < 100; i++) {
+    const numero = String(i).padStart(2, "0");
+    const boton = document.createElement("button");
+    boton.type = "button";
+    boton.className = "num";
+    boton.textContent = numero;
+    boton.onclick = function() {
+      seleccionarNumero(numero, boton);
+    };
+    contenedor.appendChild(boton);
+  }
+}
+
+function seleccionarNumero(numero, boton) {
+  if (seleccionados.includes(numero)) {
+    seleccionados = seleccionados.filter(n => n !== numero);
+    boton.classList.remove("selected");
+  } else {
+    seleccionados.push(numero);
+    boton.classList.add("selected");
+  }
+  actualizarSeleccion();
+}
+
+function actualizarSeleccion() {
+  seleccionados.sort((a,b) => Number(a)-Number(b));
+  document.getElementById("seleccion").textContent =
+    "Números seleccionados: " +
+    (seleccionados.length ? seleccionados.join(", ") : "ninguno");
+}
+
+function limpiarSeleccion() {
+  seleccionados = [];
+  document.querySelectorAll(".num").forEach(b => b.classList.remove("selected"));
+  actualizarSeleccion();
+}
+
+function enviarWhatsApp() {
+  if (seleccionados.length === 0) {
+    alert("Primero selecciona uno o varios números.");
+    return;
+  }
+
+  const mensaje = "Hola, quiero participar en Dinámicas Diarias DIANA. " +
+    "Mis números son: " + seleccionados.join(", ") +
+    ". Quiero consultar su disponibilidad.";
+  window.open("https://wa.me/" + WHATSAPP + "?text=" +
+    encodeURIComponent(mensaje), "_blank");
+}
+
+function editarRifa() {
+  const premios = prompt("Premios:", document.getElementById("premios").textContent);
+  if (premios === null) return;
+
+  const valor = prompt("Valor del número:", document.getElementById("valor-numero").textContent);
+  if (valor === null) return;
+
+  const loteria = prompt("Lotería:", document.getElementById("loteria").textContent);
+  if (loteria === null) return;
+
+  const fecha = prompt("Fecha del sorteo:", document.getElementById("fecha-sorteo").textContent);
+  if (fecha === null) return;
+
+  const hora = prompt("Hora del sorteo:", document.getElementById("hora-sorteo").textContent);
+  if (hora === null) return;
+
+  const estado = prompt("Estado de la dinámica:", document.getElementById("estado-dinamica").textContent);
+  if (estado === null) return;
+
+  const datos = {premios, valor, loteria, fecha, hora, estado};
+  const formulario = document.createElement("form");
+  formulario.method = "POST";
+  formulario.action = URL_RIFAS;
+  formulario.target = "ventana-guardado";
+
+  const campo = document.createElement("input");
+  campo.type = "hidden";
+  campo.name = "datos";
+  campo.value = JSON.stringify(datos);
+  formulario.appendChild(campo);
+
+  let iframe = document.getElementById("ventana-guardado");
+  if (!iframe) {
+    iframe = document.createElement("iframe");
+    iframe.name = "ventana-guardado";
+    iframe.id = "ventana-guardado";
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+  }
+
+  document.body.appendChild(formulario);
+  formulario.submit();
+  formulario.remove();
+
+  alert("Se enviaron los datos para guardar. Espera unos segundos y se actualizará la página.");
+  setTimeout(cargarRifa, 3000);
+}
+
+crearNumeros();
+cargarRifa();
+</script>
+</body>
+</html>
