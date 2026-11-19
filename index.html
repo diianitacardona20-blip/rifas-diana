@@ -7,16 +7,7 @@
 <title>Dinámicas Diarias DIANA</title>
 
 <style>
-:root {
-  --pink:#f328a8;
-  --purple:#6516a4;
-  --deep:#26083d;
-  --gold:#ffd66b;
-  --paper:#fff8ff;
-}
-* { box-sizing:border-box; }
 body {
-  margin:0;
   font-family:system-ui,-apple-system,Segoe UI,sans-serif;
   color:#321044;
   background:linear-gradient(145deg,#ffe5f6,#f1d9ff 48%,#fff4d7);
@@ -263,6 +254,22 @@ update();
 </script>
   <script>
 const URL_RIFAS = "https://script.google.com/macros/s/AKfycbwgzpzhlaDiKSKJyU2Mgwq8aW2tkFIXIJJOXqZTmV7qRoNM19RMQ7B2nLgb8g1A6kny5Q/exec";
+    <script>
+function cargarDatosRifa(datos) {
+  if (datos.error) return;
+
+  document.getElementById("premios").textContent = datos.premios;
+  document.getElementById("valor-numero").textContent = datos.valor;
+  document.getElementById("loteria").textContent = datos.loteria;
+  document.getElementById("fecha-sorteo").textContent = datos.fecha;
+  document.getElementById("hora-sorteo").textContent = datos.hora;
+  document.getElementById("estado-dinamica").textContent = datos.estado;
+}
+
+const scriptDatos = document.createElement("script");
+scriptDatos.src = URL_RIFAS + "?callback=cargarDatosRifa";
+document.body.appendChild(scriptDatos);
+</script>
 </script>
  <script>
 const botonEditar = document.createElement("button");
