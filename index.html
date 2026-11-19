@@ -236,7 +236,7 @@ function crearNumeros() {
   const nombre = nombresReservados.get(numero) || "Reservado";
   boton.textContent = numero + "\n" + nombre;
   boton.style.whiteSpace = "pre-line";
-  boton.style.fontSize = "11px";
+  boton.style.fontSize = "clamp(7px, 2vw, 11px)";
   boton.title = "Reservado por: " + nombre;
 
 } else if (seleccionados.includes(numero)) {
