@@ -7,140 +7,160 @@
 <title>Dinámicas Diarias DIANA</title>
 
 <style>
+* { box-sizing: border-box; }
+
 body {
-  font-family:system-ui,-apple-system,Segoe UI,sans-serif;
-  color:#321044;
-  background:linear-gradient(145deg,#ffe5f6,#f1d9ff 48%,#fff4d7);
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+  color: #321044;
+  background: linear-gradient(145deg,#ffe5f6,#f1d9ff 48%,#fff4d7);
 }
+
 header {
-  background:linear-gradient(115deg,#4c087b,#a20e9c 58%,#f328a8);
-  color:white;
-  padding:22px 16px 30px;
-  overflow:hidden;
+  background: linear-gradient(115deg,#4c087b,#a20e9c 58%,#f328a8);
+  color: white;
+  padding: 22px 16px 30px;
+  overflow: hidden;
 }
+
 .hero {
-  max-width:1050px;
-  margin:auto;
-  display:grid;
-  grid-template-columns:minmax(180px,340px) 1fr;
-  gap:22px;
-  align-items:center;
+  max-width: 1050px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: minmax(180px,340px) 1fr;
+  gap: 22px;
+  align-items: center;
 }
+
 .hero img {
-  width:100%;
-  max-height:300px;
-  object-fit:cover;
-  object-position:center 25%;
-  border:5px solid #ffe08a;
-  border-radius:28px;
-  box-shadow:0 12px 35px #21002e66;
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  object-position: center 25%;
+  border: 5px solid #ffe08a;
+  border-radius: 28px;
+  box-shadow: 0 12px 35px #21002e66;
 }
+
 h1 {
-  font-family:Georgia,serif;
-  font-size:clamp(2.2rem,6vw,4.4rem);
-  line-height:.98;
-  margin:0;
-  text-shadow:0 4px 0 #4b075f;
+  font-family: Georgia,serif;
+  font-size: clamp(2.2rem,6vw,4.4rem);
+  line-height: .98;
+  margin: 0;
+  text-shadow: 0 4px 0 #4b075f;
 }
-.tag { font-size:1.15rem; margin:12px 0; }
-.spark { color:#ffe08a; }
-main { max-width:1050px; margin:22px auto; padding:0 14px; }
+
+.tag { font-size: 1.15rem; margin: 12px 0; }
+.spark { color: #ffe08a; }
+
+main { max-width: 1050px; margin: 22px auto; padding: 0 14px; }
+
 .cards {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-  margin-bottom:18px;
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 12px;
+  margin-bottom: 18px;
 }
+
 .card {
-  background:#fff;
-  border:2px solid #f7b9e9;
-  border-radius:18px;
-  padding:15px;
-  text-align:center;
-  box-shadow:0 6px 16px #67148a18;
+  background: #fff;
+  border: 2px solid #f7b9e9;
+  border-radius: 18px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 6px 16px #67148a18;
 }
-.card b { display:block; color:#74128d; font-size:1.35rem; }
-h2 { color:#67128e; margin:24px 0 10px; }
+
+.card b { display: block; color: #74128d; font-size: 1.35rem; }
+h2 { color: #67128e; margin: 24px 0 10px; }
+
 .panel {
-  background:#fff;
-  border-radius:22px;
-  padding:16px;
-  box-shadow:0 8px 25px #67148a18;
-  border:1px solid #f3c4eb;
+  background: #fff;
+  border-radius: 22px;
+  padding: 16px;
+  box-shadow: 0 8px 25px #67148a18;
+  border: 1px solid #f3c4eb;
 }
+
 .legend {
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-  font-size:.92rem;
-  margin:8px 0 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: .92rem;
+  margin: 8px 0 14px;
 }
+
 .dot {
-  display:inline-block;
-  width:12px;
-  height:12px;
-  border-radius:50%;
-  margin-right:5px;
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 5px;
 }
+
 .grid {
-  display:grid;
-  grid-template-columns:repeat(10,minmax(0,1fr));
-  gap:5px;
+  display: grid;
+  grid-template-columns: repeat(10,minmax(0,1fr));
+  gap: 5px;
 }
+
 .num {
-  border:1px solid #c9a5d9;
-  border-radius:9px;
-  background:#fff8ff;
-  color:#48115f;
-  padding:9px 2px;
-  font-weight:800;
-  font-size:clamp(.75rem,2.2vw,1rem);
-  cursor:pointer;
+  border: 1px solid #c9a5d9;
+  border-radius: 9px;
+  background: #fff8ff;
+  color: #48115f;
+  padding: 9px 2px;
+  font-weight: 800;
+  font-size: clamp(.75rem,2.2vw,1rem);
+  cursor: pointer;
 }
-.num:focus { outline:3px solid #f328a8; }
-.num.selected {
-  background:#7b1fa2;
-  color:white;
-  border-color:#7b1fa2;
-}
+
+.num:focus { outline: 3px solid #f328a8; }
+.num.selected { background: #7b1fa2; color: white; border-color: #7b1fa2; }
+
 .actions {
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:15px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 15px;
 }
+
 .btn {
-  display:inline-block;
-  text-decoration:none;
-  border:0;
-  border-radius:999px;
-  padding:12px 18px;
-  font-weight:800;
-  cursor:pointer;
+  display: inline-block;
+  text-decoration: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 18px;
+  font-weight: 800;
+  cursor: pointer;
 }
-.primary { background:#18b85a; color:white; }
-.secondary { background:#74128d; color:white; }
-.small { font-size:.88rem; color:#694d73; line-height:1.5; }
+
+.primary { background: #18b85a; color: white; }
+.secondary { background: #74128d; color: white; }
+.small { font-size: .88rem; color: #694d73; line-height: 1.5; }
+
 .winners {
-  background:linear-gradient(120deg,#4b087b,#92108f);
-  color:white;
-  border-radius:20px;
-  padding:18px;
-  margin-top:18px;
+  background: linear-gradient(120deg,#4b087b,#92108f);
+  color: white;
+  border-radius: 20px;
+  padding: 18px;
+  margin-top: 18px;
 }
-footer { text-align:center; padding:24px 12px; color:#6b347d; }
+
+footer { text-align: center; padding: 24px 12px; color: #6b347d; }
 
 @media(max-width:650px) {
-  .hero { grid-template-columns:1fr; text-align:center; }
-  .hero img { max-width:260px; margin:auto; }
-  .cards { grid-template-columns:1fr; }
-  .grid { gap:3px; }
-  .num { padding:8px 0; border-radius:6px; }
+  .hero { grid-template-columns: 1fr; text-align: center; }
+  .hero img { max-width: 260px; margin: auto; }
+  .cards { grid-template-columns: 1fr; }
+  .grid { gap: 3px; }
+  .num { padding: 8px 0; border-radius: 6px; }
 }
 </style>
 </head>
 
 <body>
+
 <header>
   <div class="hero">
     <img src="muneca-diana.jpg" alt="Muñequita Diana">
@@ -156,175 +176,4 @@ footer { text-align:center; padding:24px 12px; color:#6b347d; }
   <section class="cards">
     <div class="card">🎁 <b>Premios</b><span>Consulta el premio de cada dinámica</span></div>
     <div class="card">🎟️ <b>Números 00–99</b><span>Escoge tus números favoritos</span></div>
-    <div class="card">💬 <b>Atención por WhatsApp</b><span>Pregunta y confirma tu reserva</span></div>
-  </section>
-
-  <section class="panel" id="datos-dinamica">
-    <h2>🎁 Dinámica actual</h2>
-    <p><b>Premios:</b> <span id="premios">Últimas dos cifras: $200.000 | Primeras dos cifras: $50.000 | Cifras del medio: $50.000</span></p>
-    <p><b>Valor del número:</b> <span id="valor-numero">$5.000</span></p>
-    <p><b>Lotería:</b> <span id="loteria">Chontico Noche</span></p>
-    <p><b>Fecha del sorteo:</b> <span id="fecha-sorteo">Por definir</span></p>
-    <p><b>Hora:</b> <span id="hora-sorteo">Por definir</span></p>
-    <p><b>Estado:</b> <span id="estado-dinamica">Disponible</span></p>
-  </section>
-
-  <section class="panel">
-    <h2>🎟️ Escoge tus números</h2>
-    <div class="legend">
-      <span><i class="dot" style="background:#fff;border:1px solid #aaa"></i>Disponible</span>
-      <span><i class="dot" style="background:#ffd34f"></i>Reservado</span>
-      <span><i class="dot" style="background:#e94c78"></i>Vendido</span>
-    </div>
-    <p class="small">Toca uno o varios números para preparar tu mensaje de WhatsApp.</p>
-    <div class="grid" id="numbers" aria-label="Números de rifa del 00 al 99"></div>
-    <div class="actions">
-      <button class="btn secondary" id="clear" type="button">Quitar selección</button>
-      <a class="btn primary" id="whatsapp" href="#" target="_blank" rel="noopener">Consultar por WhatsApp</a>
-    </div>
-    <p class="small" id="selection">Aún no has seleccionado números.</p>
-  </section>
-
-  <section class="winners">
-    <h2 style="color:#ffe08a;margin-top:0">🏆 Nuestros ganadores</h2>
-    <p>Pronto publicaremos aquí los resultados y felicitaciones.</p>
-  </section>
-
-  <footer>💗 Gracias por participar en <b>Dinámicas Diarias DIANA</b> 💗</footer>
-</main>
-
-<script>
-const WHATSAPP_NUMBER = "573192115691";
-const chosen = new Set();
-
-const grid = document.getElementById("numbers");
-const status = document.getElementById("selection");
-const wa = document.getElementById("whatsapp");
-
-function update() {
-  const nums = [...chosen]
-    .sort((a,b) => a-b)
-    .map(n => String(n).padStart(2,"0"));
-
-  status.textContent = nums.length
-    ? "Seleccionaste: " + nums.join(", ")
-    : "Aún no has seleccionado números.";
-
-  const msg = encodeURIComponent(
-    "Hola, quiero consultar disponibilidad para estos números: " +
-    (nums.join(", ") || "(aún no selecciono)") + "."
-  );
-
-  wa.href = "https://api.whatsapp.com/send?phone=" +
-    WHATSAPP_NUMBER + "&text=" + msg;
-}
-
-// Crear los 100 números, desde 00 hasta 99.
-for (let n = 0; n < 100; n++) {
-  const b = document.createElement("button");
-  b.className = "num";
-  b.type = "button";
-  b.textContent = String(n).padStart(2,"0");
-
-  b.addEventListener("click", () => {
-    if (chosen.has(n)) {
-      chosen.delete(n);
-      b.classList.remove("selected");
-    } else {
-      chosen.add(n);
-      b.classList.add("selected");
-    }
-    update();
-  });
-
-  grid.appendChild(b);
-}
-
-// Quitar todos los números seleccionados.
-document.getElementById("clear").addEventListener("click", () => {
-  chosen.clear();
-  document.querySelectorAll(".num").forEach(b => {
-    b.classList.remove("selected");
-  });
-  update();
-});
-
-// Preparar el enlace de WhatsApp.
-update();
-</script>
-  <script>
-const URL_RIFAS = "https://script.google.com/macros/s/AKfycbwgzpzhlaDiKSKJyU2Mgwq8aW2tkFIXIJJOXqZTmV7qRoNM19RMQ7B2nLgb8g1A6kny5Q/exec";
-    <script>
-function cargarDatosRifa(datos) {
-  if (datos.error) return;
-
-  document.getElementById("premios").textContent = datos.premios;
-  document.getElementById("valor-numero").textContent = datos.valor;
-  document.getElementById("loteria").textContent = datos.loteria;
-  document.getElementById("fecha-sorteo").textContent = datos.fecha;
-  document.getElementById("hora-sorteo").textContent = datos.hora;
-  document.getElementById("estado-dinamica").textContent = datos.estado;
-}
-
-const scriptDatos = document.createElement("script");
-scriptDatos.src = URL_RIFAS + "?callback=cargarDatosRifa";
-document.body.appendChild(scriptDatos);
-</script>
-</script>
- <script>
-const botonEditar = document.createElement("button");
-
-botonEditar.textContent = "✏️ EDITAR RIFA";
-botonEditar.style.cssText =
-"position:fixed;bottom:20px;right:20px;z-index:99999;padding:15px;background:#e91e63;color:white;border:0;border-radius:12px;font-weight:bold;font-size:16px;";
-
-document.body.appendChild(botonEditar);
-
-const marco = document.createElement("iframe");
-marco.name = "respuestaRifas";
-marco.style.display = "none";
-document.body.appendChild(marco);
-
-botonEditar.onclick = function() {
-  const premios = prompt("Premios de la rifa:");
-  if (premios === null) return;
-
-  const valor = prompt("Valor del número:");
-  if (valor === null) return;
-
-  const loteria = prompt("Lotería:");
-  if (loteria === null) return;
-
-  const fecha = prompt("Fecha del sorteo:");
-  if (fecha === null) return;
-
-  const hora = prompt("Hora del sorteo:");
-  if (hora === null) return;
-
-  const estado = prompt("Estado de la rifa:");
-  if (estado === null) return;
-
-  const datos = {
-    premios, valor, loteria, fecha, hora, estado
-  };
-
-  const formulario = document.createElement("form");
-  formulario.method = "POST";
-  formulario.action = URL_RIFAS;
-  formulario.target = "respuestaRifas";
-
-  const campo = document.createElement("input");
-  campo.type = "hidden";
-  campo.name = "datos";
-  campo.value = JSON.stringify(datos);
-
-  formulario.appendChild(campo);
-  document.body.appendChild(formulario);
-  formulario.submit();
-
-  alert("Solicitud enviada. Comprueba los datos en Google Sheets.");
-  formulario.remove();
-};
-</script>
-</body>
-</html>
+    <div class="card">💬 <b>Atención por WhatsApp</b><span>Pregunta y confirma t…
