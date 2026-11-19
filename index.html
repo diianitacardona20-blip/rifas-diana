@@ -133,6 +133,7 @@ const WHATSAPP = "573192115691";
 
 let seleccionados = [];
 let reservados = new Set();
+  let nombresReservados = new Map();
 let procesando = false;
 
 function consultarGoogle(parametros) {
@@ -201,10 +202,14 @@ async function cargarReservas() {
     const datos = await consultarGoogle({accion:"reservas"});
     if (!datos || !datos.ok) throw new Error("No se pudieron leer las reservas");
 
-    reservados = new Set(
-      (datos.reservas || []).map(r => String(r.numero).padStart(2,"0"))
-    );
+   nombresReservados = new Map(
+  (datos.reservas || []).map(r => [
+    String(r.numero).padStart(2,"0"),
+    r.nombre
+  ])
+);
 
+reservados = new Set(nombresReservados.keys())
     crearNumeros();
     actualizarSeleccion();
   } catch (error) {
@@ -224,13 +229,19 @@ function crearNumeros() {
     boton.className = "num";
     boton.textContent = numero;
 
-    if (reservados.has(numero)) {
-      boton.classList.add("reserved");
-      boton.disabled = true;
-      boton.title = "Número reservado";
-    } else if (seleccionados.includes(numero)) {
-      boton.classList.add("selected");
-    }
+   if (reservados.has(numero)) {
+  boton.classList.add("reserved");
+  boton.disabled = true;
+
+  const nombre = nombresReservados.get(numero) || "Reservado";
+  boton.textContent = numero + "\n" + nombre;
+  boton.style.whiteSpace = "pre-line";
+  boton.style.fontSize = "11px";
+  boton.title = "Reservado por: " + nombre;
+
+} else if (seleccionados.includes(numero)) {
+  boton.classList.add("selected");
+}
 
     boton.onclick = function() {
       seleccionarNumero(numero, boton);
