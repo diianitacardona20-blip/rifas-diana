@@ -264,7 +264,7 @@ update();
   <script>
 const URL_RIFAS = "https://script.google.com/macros/s/AKfycbwgzpzhlaDiKSKJyU2Mgwq8aW2tkFIXIJJOXqZTmV7qRoNM19RMQ7B2nLgb8g1A6kny5Q/exec";
 </script>
-  <script>
+ <script>
 const botonEditar = document.createElement("button");
 
 botonEditar.textContent = "✏️ EDITAR RIFA";
@@ -272,6 +272,11 @@ botonEditar.style.cssText =
 "position:fixed;bottom:20px;right:20px;z-index:99999;padding:15px;background:#e91e63;color:white;border:0;border-radius:12px;font-weight:bold;font-size:16px;";
 
 document.body.appendChild(botonEditar);
+
+const marco = document.createElement("iframe");
+marco.name = "respuestaRifas";
+marco.style.display = "none";
+document.body.appendChild(marco);
 
 botonEditar.onclick = function() {
   const premios = prompt("Premios de la rifa:");
@@ -308,17 +313,11 @@ botonEditar.onclick = function() {
 
   formulario.appendChild(campo);
   document.body.appendChild(formulario);
-
   formulario.submit();
+
+  alert("Solicitud enviada. Comprueba los datos en Google Sheets.");
   formulario.remove();
-
-  alert("Solicitud enviada. Revisa los datos en tu hoja de cálculo.");
 };
-
-const marco = document.createElement("iframe");
-marco.name = "respuestaRifas";
-marco.style.display = "none";
-document.body.appendChild(marco);
 </script>
 </body>
 </html>
